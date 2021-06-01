@@ -1,3 +1,5 @@
+using Infrastructure;
+using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -6,9 +8,11 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.OpenApi.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
 
 namespace Groceries.Api
@@ -25,8 +29,36 @@ namespace Groceries.Api
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddInfrastructure(Configuration);
 
             services.AddControllers();
+
+            services.AddMediatR(Assembly.GetExecutingAssembly());
+
+            services.AddSwaggerGen(x =>
+            {
+                x.SwaggerDoc("v1", new OpenApiInfo
+                {
+                    Title = "ONLINE GROCERIES API",
+                    Version = "v1",
+                    Description = $"API Documentation for Open Groceries - Development",
+                    Contact = new OpenApiContact()
+                    {
+                        Name = "Rendy Faqot",
+                        Email = "rendy.faqot@gmail.com",
+                    },
+                    License = new OpenApiLicense
+                    {
+                        Name = "rendyfaqot",
+                    },
+                });
+                x.CustomSchemaIds(y => y.FullName);
+                x.DocInclusionPredicate((version, apiDescription) => true);
+                x.TagActionsBy(y => new List<string>
+                    {
+                        y.GroupName
+                    });
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -38,6 +70,12 @@ namespace Groceries.Api
             }
 
             app.UseHttpsRedirection();
+
+            // Enable middleware to serve generated Swagger as a JSON endpoint
+            app.UseSwagger(c => { c.RouteTemplate = "swagger/{documentName}/swagger.json"; });
+
+            // Enable middleware to serve swagger-ui assets(HTML, JS, CSS etc.)
+            app.UseSwaggerUI(x => { x.SwaggerEndpoint("/swagger/v1/swagger.json", "Online Groceries API V1"); });
 
             app.UseRouting();
 
