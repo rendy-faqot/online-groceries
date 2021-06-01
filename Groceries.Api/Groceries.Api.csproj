@@ -18,4 +18,18 @@
     <ProjectReference Include="..\Infrastructure\Infrastructure.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="wwwroot\Images\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="wwwroot\Images\Untitled-1.png" />
+    <None Include="wwwroot\Images\Untitled-2.png" />
+    <None Include="wwwroot\Images\Untitled-3.png" />
+    <None Include="wwwroot\Images\Untitled-5.png" />
+    <None Include="wwwroot\Images\Untitled-7.png" />
+    <None Include="wwwroot\Images\Untitled-8.jpg" />
+    <None Include="wwwroot\Images\Untitled-9.jpg" />
+  </ItemGroup>
+
 </Project>

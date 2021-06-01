@@ -28,9 +28,12 @@ namespace Groceries.Api.Features.Products.Queries
 
         public async Task<PaginatedList<Product>> Handle(GetProductsWithPaginationQuery request, CancellationToken cancellationToken)
         {
-            return await _context.Products
+            var result = await _context.Products
                 .OrderBy(x => x.Name)
-                .PaginatedListAsync(request.PageNumber, request.PageSize); ;
+                .PaginatedListAsync(request.PageNumber, request.PageSize);
+
+            result.Items.ForEach(x => x.ImageUrl = $"https://localhost:5001/Images/{x.ImageUrl}");
+            return result;
         }
     }
 }
